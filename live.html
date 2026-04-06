@@ -343,7 +343,7 @@
                 // Detect environment and use appropriate backend URL
                 const isGitHubPages = window.location.hostname === 'ayo454.github.io';
                 const backendOrigin = isGitHubPages
-                    ? 'https://your-church-backend.herokuapp.com' // Replace with your deployed backend URL
+                    ? 'https://the-word-of-god-deliverance-vinyard.onrender.com' // Replace with your deployed Render URL
                     : 'http://127.0.0.1:5000';
 
                 const response = await fetch(`${backendOrigin}/status`);
@@ -386,7 +386,7 @@
             try {
                 const isGitHubPages = window.location.hostname === 'ayo454.github.io';
                 const backendOrigin = isGitHubPages
-                    ? 'https://your-church-backend.herokuapp.com' // Replace with your deployed backend URL
+                    ? 'https://the-word-of-god-deliverance-vinyard.onrender.com' // Replace with your deployed Render URL
                     : 'http://127.0.0.1:5000';
 
                 const rtcConfiguration = {
