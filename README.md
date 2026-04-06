@@ -2,76 +2,77 @@
 
 A WebRTC-based live streaming system for church services with broadcaster and viewer interfaces.
 
-## Local Development
+## 🚀 Quick Start
 
-1. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. Run the server:
-   ```bash
-   python app.py
-   ```
-
-3. Open in browser:
+### For Local Development Only
+1. Install dependencies: `pip install -r requirements.txt`
+2. Run server: `python app.py`
+3. Open:
    - **Broadcaster**: `http://127.0.0.1:5000/media-panel/go-live`
    - **Viewer**: `http://127.0.0.1:5000/live`
-   - **Dashboard**: `http://127.0.0.1:5000/`
 
-## Production Deployment Options
+### For Production (GitHub Pages + Backend)
+1. **Deploy Backend**: Choose one of the options below
+2. **Update URLs**: Replace `https://your-church-backend.herokuapp.com` in HTML files with your deployed backend URL
+3. **Deploy Frontend**: Push HTML files to GitHub Pages
 
-### Option 1: Heroku (Recommended)
-1. Create a Heroku account
-2. Install Heroku CLI
-3. Create a new app:
-   ```bash
-   heroku create your-church-live-stream
-   ```
-4. Deploy:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   heroku git:remote -a your-church-live-stream
-   git push heroku main
-   ```
+## 🔧 Backend Deployment Options
 
-### Option 2: Railway
-1. Go to [Railway.app](https://railway.app)
-2. Connect your GitHub repository
-3. Deploy automatically
+### Heroku (Recommended)
+```bash
+heroku create your-church-live-stream
+git init && git add . && git commit -m "Deploy"
+git push heroku main
+# Note the URL: https://your-church-live-stream.herokuapp.com
+```
 
-### Option 3: DigitalOcean App Platform
-1. Create a DigitalOcean account
-2. Use App Platform to deploy from GitHub
+### Railway
+1. Connect GitHub repo to Railway
+2. Auto-deploys on push
 
-### Option 4: VPS (Advanced)
-Deploy to a VPS with Nginx reverse proxy and SSL certificate.
+### DigitalOcean App Platform
+1. Connect GitHub repo
+2. Deploy automatically
 
-## Features
+## ⚙️ Configuration
 
-- **WebRTC Streaming**: Real-time video streaming between broadcaster and viewers
-- **Live Chat**: Interactive chat system
-- **Status Monitoring**: Live viewer count and stream duration
+### Update Backend URLs
+After deploying your backend, update these files:
+
+**In `live.html` and `media-panel/go-live.html`:**
+```javascript
+// Change this line:
+'https://your-church-backend.herokuapp.com'
+// To your actual backend URL:
+'https://your-deployed-backend-url.com'
+```
+
+### Environment Detection
+The app automatically detects:
+- **GitHub Pages**: Uses deployed backend URL
+- **Localhost**: Uses `http://127.0.0.1:5000`
+
+## 📋 Features
+
+- **WebRTC Streaming**: Real-time video between broadcaster and viewers
+- **Live Chat**: Interactive messaging system
+- **Status Monitoring**: Viewer count and stream duration
 - **Mobile Responsive**: Works on all devices
-- **HTTPS Ready**: Secure streaming for production
+- **CORS Ready**: Handles different deployment environments
 
-## CORS Issues
-
-If you encounter CORS errors when accessing from different domains:
-- For local development: Use `http://127.0.0.1:5000` URLs
-- For production: Deploy to a proper hosting service with HTTPS
-
-## Browser Support
-
-- Chrome/Edge: Full support
-- Firefox: Full support
-- Safari: Full support
-- Mobile browsers: Full support
-
-## Security Notes
+## 🔒 Security Notes
 
 - Camera/microphone permissions required for broadcasting
 - HTTPS recommended for production
-- Consider authentication for broadcaster access in production
+- Consider authentication for broadcaster access
+
+## 🐛 Troubleshooting
+
+### CORS Errors
+- **Local**: Use `http://127.0.0.1:5000` URLs
+- **GitHub Pages**: Deploy backend first, then update URLs
+
+### Connection Issues
+- Ensure Flask server is running
+- Check backend URL configuration
+- Verify network/firewall settings

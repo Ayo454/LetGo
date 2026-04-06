@@ -340,7 +340,12 @@
 
         async function fetchLiveStatus() {
             try {
-                const backendOrigin = 'http://127.0.0.1:5000';
+                // Detect environment and use appropriate backend URL
+                const isGitHubPages = window.location.hostname === 'ayo454.github.io';
+                const backendOrigin = isGitHubPages
+                    ? 'https://your-church-backend.herokuapp.com' // Replace with your deployed backend URL
+                    : 'http://127.0.0.1:5000';
+
                 const response = await fetch(`${backendOrigin}/status`);
 
                 if (!response.ok) {
@@ -379,6 +384,11 @@
         // WebRTC viewer function
         async function startWebRTCViewer() {
             try {
+                const isGitHubPages = window.location.hostname === 'ayo454.github.io';
+                const backendOrigin = isGitHubPages
+                    ? 'https://your-church-backend.herokuapp.com' // Replace with your deployed backend URL
+                    : 'http://127.0.0.1:5000';
+
                 const rtcConfiguration = {
                     iceServers: [
                         { urls: 'stun:stun.l.google.com:19302' }
@@ -396,7 +406,7 @@
                 };
 
                 // Get offer from broadcaster
-                const offerResponse = await fetch('http://127.0.0.1:5000/webrtc/offer');
+                const offerResponse = await fetch(`${backendOrigin}/webrtc/offer`);
                 const offer = await offerResponse.json();
 
                 if (offer.type && offer.sdp) {
@@ -407,7 +417,7 @@
                     await window.peerConnection.setLocalDescription(answer);
 
                     // Send answer back
-                    await fetch('http://127.0.0.1:5000/webrtc/answer', {
+                    await fetch(`${backendOrigin}/webrtc/answer`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -416,7 +426,7 @@
                     });
 
                     // Get ICE candidates
-                    const candidatesResponse = await fetch('http://127.0.0.1:5000/webrtc/candidates');
+                    const candidatesResponse = await fetch(`${backendOrigin}/webrtc/candidates`);
                     const candidates = await candidatesResponse.json();
 
                     // Add remote ICE candidates
