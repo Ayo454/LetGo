@@ -1,8 +1,11 @@
 from flask import Flask, jsonify, request, send_from_directory
 import time
 import json
+from flask_cors import CORS
 
 app = Flask(__name__, static_folder='')
+
+CORS(app)
 
 live_state = {
     'live': False,
