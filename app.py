@@ -1,25 +1,49 @@
 from flask import Flask, jsonify, request, send_from_directory
 import time
 import json
+import os
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder='')
 
 CORS(app)
 
-live_state = {
-    'live': False,
-    'started_at': None,
-    'viewers': 0,
-    'video_url': 'https://www.youtube.com/embed/YOUR_LIVE_VIDEO_ID?autoplay=1&mute=0'
-}
+LIVE_STATE_FILE = 'live_state.json'
+SIGNALING_FILE = 'signaling_data.json'
+
+def load_live_state():
+    if os.path.exists(LIVE_STATE_FILE):
+        with open(LIVE_STATE_FILE, 'r') as f:
+            return json.load(f)
+    return {
+        'live': False,
+        'started_at': None,
+        'viewers': 0,
+        'video_url': 'https://www.youtube.com/embed/YOUR_LIVE_VIDEO_ID?autoplay=1&mute=0'
+    }
+
+def save_live_state(state):
+    with open(LIVE_STATE_FILE, 'w') as f:
+        json.dump(state, f)
+
+def load_signaling_data():
+    if os.path.exists(SIGNALING_FILE):
+        with open(SIGNALING_FILE, 'r') as f:
+            return json.load(f)
+    return {
+        'offer': None,
+        'answer': None,
+        'candidates': []
+    }
+
+def save_signaling_data(data):
+    with open(SIGNALING_FILE, 'w') as f:
+        json.dump(data, f)
+
+live_state = load_live_state()
 
 # WebRTC signaling
-signaling_data = {
-    'offer': None,
-    'answer': None,
-    'candidates': []
-}
+signaling_data = load_signaling_data()
 
 @app.route('/')
 def homepage():
@@ -54,6 +78,7 @@ def start_live():
         live_state['live'] = True
         live_state['started_at'] = time.time()
         live_state['viewers'] = 1
+        save_live_state(live_state)
     return jsonify(
         live=True,
         viewers=live_state['viewers'],
@@ -65,9 +90,11 @@ def stop_live():
     live_state['live'] = False
     live_state['started_at'] = None
     live_state['viewers'] = 0
+    save_live_state(live_state)
     signaling_data['offer'] = None
     signaling_data['answer'] = None
     signaling_data['candidates'] = []
+    save_signaling_data(signaling_data)
     return jsonify(live=False)
 
 # WebRTC signaling endpoints
@@ -75,18 +102,21 @@ def stop_live():
 def webrtc_offer():
     data = request.get_json()
     signaling_data['offer'] = data
+    save_signaling_data(signaling_data)
     return jsonify({'status': 'ok'})
 
 @app.route('/webrtc/answer', methods=['POST'])
 def webrtc_answer():
     data = request.get_json()
     signaling_data['answer'] = data
+    save_signaling_data(signaling_data)
     return jsonify({'status': 'ok'})
 
 @app.route('/webrtc/candidate', methods=['POST'])
 def webrtc_candidate():
     data = request.get_json()
     signaling_data['candidates'].append(data)
+    save_signaling_data(signaling_data)
     return jsonify({'status': 'ok'})
 
 @app.route('/webrtc/offer')
