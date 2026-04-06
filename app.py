@@ -110,4 +110,8 @@ def static_files(filename):
     return send_from_directory('.', filename)
 
 if __name__ == '__main__':
+    # For local development
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+    # For production deployment with gunicorn, use:
+    # gunicorn app:app -b 0.0.0.0:$PORT

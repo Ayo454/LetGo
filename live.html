@@ -367,6 +367,12 @@
                 }
             } catch (error) {
                 console.error('Unable to fetch live status:', error);
+                const statusText = document.getElementById('live-status-text');
+                if (error.message.includes('Failed to fetch') || error.message.includes('CORS')) {
+                    statusText.textContent = 'Connection error - check server';
+                } else {
+                    statusText.textContent = 'Stream offline';
+                }
             }
         }
 
